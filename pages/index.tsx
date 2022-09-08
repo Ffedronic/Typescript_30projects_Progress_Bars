@@ -1,22 +1,75 @@
 import type { NextPage } from "next";
-import { useEffect } from "react";
+import { useEffect, MouseEvent, useState } from "react";
 import Button from "../components/Button";
 import Step from "../components/Step";
 import Head from "next/head";
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    const circles = document.getElementsByClassName("circle");
+  let [count, setCount] = useState(1);
 
-    circles[0].classList.add("active");
+  const steps = [
+    { level: "1" },
+    { level: "2" },
+    { level: "3" },
+    { level: "4" },
+  ];
 
-    const disabled = document.querySelector("#prev")?.attributes.getNamedItem("disabled")
-    console.log(disabled?.name)
-  }, []);
-
-  const steps = [{name: "1"},{name: "2"},{name: "3"},{name: "4"}];
-
+  enum Progression {
+    Up,
+    Down,
+  }
   
+  function changeDirection(count: number) {
+    const nextButton = document.getElementById("next") as HTMLButtonElement;
+    const prevButton = document.getElementById("prev") as HTMLButtonElement;
+    if (count === 1) {
+      prevButton.disabled = true;
+    } else if (count === steps.length) {
+      nextButton.disabled = true;
+    } else {
+      prevButton.disabled = false;
+      nextButton.disabled = false;
+    }
+  }
+
+  function activateFirstCircle() {
+    const circles = document.getElementsByClassName("circle") as  HTMLCollectionOf<HTMLLIElement>;
+    circles[0].classList.add("active");
+  }
+
+  function progressSteps(progression: Progression) {
+    if (progression === Progression.Up) {
+      count++;
+      if (count >= steps.length) {
+        count = 4;
+      }
+    }
+    if (progression === Progression.Down) {
+      count--;
+      if (count <= 1) {
+        count = 1;
+      }
+    }
+
+    return count;
+  }
+
+  function handleNextClick(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    setCount(progressSteps(Progression.Up));
+    console.log(count);
+  }
+
+  function handlePrevClick(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    setCount(progressSteps(Progression.Down));
+    console.log(count);
+  }
+
+  useEffect(() => {
+    activateFirstCircle();
+    changeDirection(count);
+  }, [count]);
 
   return (
     <div>
@@ -31,10 +84,12 @@ const Home: NextPage = () => {
         <div className="container">
           <div className="progress-container">
             <div className="progress" id="progress"></div>
-            {steps.map((item)=> <Step key={item.name} name={item.name} />)}
+            {steps.map((item) => (
+              <Step key={item.level} name={item.level} />
+            ))}
           </div>
-          <Button id="prev" name="Prev" disabled={true} />
-          <Button id="next" name="Next" />
+          <Button clickHandler={handlePrevClick} id="prev" name="Prev" />
+          <Button clickHandler={handleNextClick} id="next" name="Next" />
         </div>
       </main>
     </div>

@@ -1,18 +1,23 @@
+import { MouseEventHandler } from "react";
+
 interface Button {
   id: string;
   name: string;
   disabled?: boolean;
+  clickHandler?: MouseEventHandler<HTMLButtonElement>
 }
-function Button({ id, name, disabled }: Button) {
+
+function Button({ id, name, disabled, clickHandler }: Button) {
+
   if (disabled) {
     return (
-      <button className="btn" id={id} disabled>
+      <button onClick={clickHandler} className="btn" id={id} disabled>
         {name}
       </button>
     );
   }
   return (
-    <button className="btn" id={id}>
+    <button onClick={clickHandler} className="btn" id={id}>
       {name}
     </button>
   );
