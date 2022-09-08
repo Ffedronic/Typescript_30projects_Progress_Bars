@@ -1,7 +1,18 @@
 import type { NextPage } from "next";
+import { useEffect } from "react";
+import Button from "../components/Button";
+import Step from "../components/Step";
 import Head from "next/head";
 
 const Home: NextPage = () => {
+  useEffect(() => {
+    const circles = document.getElementsByClassName("circle");
+
+    circles[0].classList.add("active");
+  }, []);
+
+  const steps = [{name: "1"},{name: "2"},{name: "3"},{name: "4"}];
+
   return (
     <div>
       <Head>
@@ -11,21 +22,14 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <h1 className="title">Create Progress Steps</h1>
+        <h1 className="title">Progress Steps</h1>
         <div className="container">
           <div className="progress-container">
             <div className="progress" id="progress"></div>
-            <div className="circle active">1</div>
-            <div className="circle">2</div>
-            <div className="circle">3</div>
-            <div className="circle">4</div>
+            {steps.map((item)=> <Step key={item.name} name={item.name} />)}
           </div>
-          <button className="btn" id="prev" disabled>
-            Prev
-          </button>
-          <button className="btn" id="next">
-            Next
-          </button>
+          <Button id="prev" name="Prev" disabled={true} />
+          <Button id="prev" name="Next" />
         </div>
       </main>
     </div>
