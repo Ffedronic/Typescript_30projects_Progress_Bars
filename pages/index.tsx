@@ -9,9 +9,14 @@ const Home: NextPage = () => {
     const circles = document.getElementsByClassName("circle");
 
     circles[0].classList.add("active");
+
+    const disabled = document.querySelector("#prev")?.attributes.getNamedItem("disabled")
+    console.log(disabled?.name)
   }, []);
 
   const steps = [{name: "1"},{name: "2"},{name: "3"},{name: "4"}];
+
+  
 
   return (
     <div>
@@ -29,7 +34,7 @@ const Home: NextPage = () => {
             {steps.map((item)=> <Step key={item.name} name={item.name} />)}
           </div>
           <Button id="prev" name="Prev" disabled={true} />
-          <Button id="prev" name="Next" />
+          <Button id="next" name="Next" />
         </div>
       </main>
     </div>
